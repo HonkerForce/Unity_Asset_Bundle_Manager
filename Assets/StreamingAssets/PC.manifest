@@ -1,0 +1,11 @@
+ManifestFileVersion: 0
+CRC: 3836084084
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: pref
+      Dependencies:
+        Dependency_0: mater
+    Info_1:
+      Name: mater
+      Dependencies: {}

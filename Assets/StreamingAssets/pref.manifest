@@ -1,0 +1,33 @@
+ManifestFileVersion: 0
+CRC: 1883441460
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 9227f05c7af9eeaef111e91557e1b9f4
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: ad28ea2d4608b5c15c701c0724e83862
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Resources/Prefab/Cube.prefab
+- Assets/Resources/Prefab/Cylinder.prefab
+Dependencies:
+- D:/Practice-Library/Unity_Asset_Bundle_Manager/AssetBundles/PC/mater

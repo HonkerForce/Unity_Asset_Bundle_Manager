@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -51,7 +50,7 @@ public class ImportAssetBundle : MonoBehaviour
 
         if (!LoadBundle(strBundle, strRes))
         {
-            Debug.Log("AB°ü¼ÓÔØÊ§°Ü£¡");
+            Debug.Log("ABåŒ…åŠ è½½å¤±è´¥ï¼");
             return null;
         }
 
@@ -73,7 +72,7 @@ public class ImportAssetBundle : MonoBehaviour
 				Object ret = m_Bundles[strBundle].LoadAsset(strRes);
 				if (ret == null)
 				{
-					Debug.Log("Î´ÔÚAB°üÖĞÕÒµ½×ÊÔ´¶ÔÏó");
+					Debug.Log("æœªåœ¨ABåŒ…ä¸­æ‰¾åˆ°èµ„æºå¯¹è±¡");
 					return null;
 				}
 				m_Assets[strRes] = ret;
@@ -88,7 +87,7 @@ public class ImportAssetBundle : MonoBehaviour
     {
         if (string.IsNullOrEmpty(strBundleName))
         {
-            Debug.Log("´«ÈëÒª¼ÓÔØµÄ°üÃû·Ç·¨£¡");
+            Debug.Log("ä¼ å…¥è¦åŠ è½½çš„åŒ…åéæ³•ï¼");
             return false;
         }
 
@@ -107,7 +106,7 @@ public class ImportAssetBundle : MonoBehaviour
 			{
 				if (m_MainBundle.Contains("AssetBundleManifest") == false)
 				{
-					Debug.Log("ÎŞÒÀÀµÅäÖÃÎÄ¼ş£¬AB°ü»òÒÑËğ»µ");
+					Debug.Log("æ— ä¾èµ–é…ç½®æ–‡ä»¶ï¼ŒABåŒ…æˆ–å·²æŸå");
 					return false;
 				}
 				m_Manifest = m_MainBundle.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
@@ -120,7 +119,7 @@ public class ImportAssetBundle : MonoBehaviour
         {
             if (IsAnycLoadBundle)
             {
-                StartCoroutine(AnycLoadBundle(strBundleName, strRes, AddBundleAndInstantiate));
+                StartCoroutine(AsyncLoadBundle(strBundleName, strRes, AddBundleAndInstantiate));
             }
             else
             {
@@ -136,7 +135,7 @@ public class ImportAssetBundle : MonoBehaviour
     {
         if (string.IsNullOrEmpty (strBundleName))
         {
-            Debug.LogError("¼ÓÔØÒÀÀµ°üÃû·Ç·¨£¡");
+            Debug.LogError("åŠ è½½ä¾èµ–åŒ…åéæ³•ï¼");
             return false;
         }
         if (m_Manifest == null)
@@ -148,7 +147,7 @@ public class ImportAssetBundle : MonoBehaviour
         string[] strDependBundle = m_Manifest.GetAllDependencies(strBundleName);
         if (strBundleName.Length == 0)
         {
-            Debug.Log(strBundleName + "ÎŞÒÀÀµ°üÎÄ¼ş");
+            Debug.Log(strBundleName + "æ— ä¾èµ–åŒ…æ–‡ä»¶");
             return true;
         }
 
@@ -162,7 +161,7 @@ public class ImportAssetBundle : MonoBehaviour
 
             if (IsAnycLoadBundle)
             {
-                StartCoroutine(AnycLoadBundle(strBundle, AddBundle));
+                StartCoroutine(AsyncLoadBundle(strBundle, AddBundle));
             }
             else
             {
@@ -177,7 +176,7 @@ public class ImportAssetBundle : MonoBehaviour
         return true;
     }
 
-    IEnumerator AnycLoadBundle(string strBundleName, UnityAction<AssetBundle> CallbackFunc)
+    IEnumerator AsyncLoadBundle(string strBundleName, UnityAction<AssetBundle> CallbackFunc)
     {
         AssetBundleCreateRequest bundleRequest = AssetBundle.LoadFromFileAsync(strABUrl + strBundleName);
         yield return bundleRequest;
@@ -188,7 +187,7 @@ public class ImportAssetBundle : MonoBehaviour
         yield return null;
     }
 
-	IEnumerator AnycLoadBundle(string strBundleName, string strRes, UnityAction<AssetBundle, string> CallbackFunc)
+	IEnumerator AsyncLoadBundle(string strBundleName, string strRes, UnityAction<AssetBundle, string> CallbackFunc)
 	{
 		AssetBundleCreateRequest bundleRequest = AssetBundle.LoadFromFileAsync(strABUrl + strBundleName);
 		yield return bundleRequest;
@@ -247,11 +246,6 @@ public class ImportAssetBundle : MonoBehaviour
             Instance = this;
         }
     }
-
-    void Start()
-    {
-
-	}
 
     void Update()
     {

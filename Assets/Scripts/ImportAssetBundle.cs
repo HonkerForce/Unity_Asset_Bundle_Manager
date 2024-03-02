@@ -1,7 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
+using Object = UnityEngine.Object;
 
 public class ImportAssetBundle : MonoBehaviour
 {
@@ -58,7 +65,7 @@ public class ImportAssetBundle : MonoBehaviour
         {
             if (IsAnycLoadBundle)
             {
-                StartCoroutine(AnycLoadAsset(strBundle, strRes, obj =>
+                StartCoroutine(AsyncLoadAsset(strBundle, strRes, obj =>
                 {
                     if (!m_Assets.ContainsKey(obj.name))
                     {
@@ -198,7 +205,7 @@ public class ImportAssetBundle : MonoBehaviour
 		yield return null;
 	}
 
-	IEnumerator AnycLoadAsset(string strBundleName, string strAssetName, UnityAction<Object> CallbackFunc)
+	IEnumerator AsyncLoadAsset(string strBundleName, string strAssetName, UnityAction<Object> CallbackFunc)
     {
 		AssetBundleRequest assetRequest = m_Bundles[strBundleName].LoadAssetAsync(strAssetName);
         yield return assetRequest;
@@ -229,7 +236,7 @@ public class ImportAssetBundle : MonoBehaviour
 
         if (bundle != null && string.IsNullOrEmpty(strRes) == false)
         {
-            StartCoroutine(AnycLoadAsset(bundle.name, strRes, obj =>
+            StartCoroutine(AsyncLoadAsset(bundle.name, strRes, obj =>
             {
                 if (obj is GameObject)
                 {
@@ -244,6 +251,63 @@ public class ImportAssetBundle : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+        }
+        
+        string md5Name = Path.Combine(strABUrl, "MD5.json");
+        if (File.Exists(md5Name))
+        {
+            File.Delete(md5Name);
+        }
+        string metaFileName = md5Name + ".meta";
+        if (File.Exists(metaFileName))
+        {
+            File.Delete(metaFileName);
+        }
+    }
+
+    private void Start()
+    {
+        Dictionary<string, string> md5Bundles = new();
+        var fileNames = Directory.GetFiles(strABUrl);
+        var md5 = MD5.Create();
+        StringBuilder strBuilder = new();
+        foreach (var name in fileNames)
+        {
+            if (Path.GetExtension(name) == ".manifest" || Path.GetExtension(name) == ".meta")
+            {
+                continue;
+            }
+
+            var fileStr = File.OpenRead(name);
+            if (fileNames.Length == 0)
+            {
+                continue;
+            }
+
+            byte[] hashStr = md5.ComputeHash(fileStr);
+            foreach (var c in hashStr)
+            {
+                strBuilder.Append(c.ToString("x2"));
+            }
+            if (strBuilder.Length > 0 && !md5Bundles.ContainsKey(name))
+            {
+                md5Bundles.Add(name.Substring(name.LastIndexOf("/") + 1), strBuilder.ToString());
+            }
+        }
+
+        strBuilder.Clear();
+        foreach (var md in md5Bundles)
+        {
+            strBuilder.AppendLine($"{md.Key}: {md.Value}");
+        }
+
+        string md5Name = Path.Combine(strABUrl, "MD5.json");
+        if (strBuilder.Length > 0)
+        {
+            using (StreamWriter jsonWriter = File.CreateText(md5Name))
+            {
+                jsonWriter.Write(strBuilder.ToString());
+            }
         }
     }
 
